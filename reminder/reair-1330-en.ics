@@ -1,0 +1,23 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//REAIR//Daily reminder//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:reair-daily-1330@alexmckinley-dev.github.io
+DTSTAMP:20261116T000000Z
+DTSTART:20261116T133000
+DURATION:PT10M
+RRULE:FREQ=DAILY
+SUMMARY:REAIR · Time to breathe
+DESCRIPTION:A few minutes just for you: https://alexmckinley-dev.github.io/
+ reair/\nTo stop the reminder\, delete this event.
+URL:https://alexmckinley-dev.github.io/reair/
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:REAIR · Time to breathe
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+END:VCALENDAR

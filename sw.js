@@ -1,7 +1,7 @@
 // REAIR service worker: makes the app work offline once it has been opened.
 // The lists below are filled in by the build (see vite.config.ts).
-const BUILD = "18d64a9428c1";
-const SHELL = ["./","./assets/index-4PvRmF2w.css","./assets/index-kE9LrvQi.js","./brand/enso.svg","./brand/headphones.svg","./brand/nose.svg","./brand/symbol.svg","./brand/wordmark.svg","./fonts/Alcubierre.otf","./icons/apple-touch-icon.png","./icons/favicon.svg","./icons/icon-192.png","./icons/icon-512.png","./icons/maskable-512.png","./index.html","./manifest.webmanifest"];
+const BUILD = "406bc766f54d";
+const SHELL = ["./","./assets/index-Bfs9h23t.js","./assets/index-DrVv7xcd.css","./brand/enso.svg","./brand/headphones.svg","./brand/nose.svg","./brand/symbol.svg","./brand/wordmark.svg","./fonts/Alcubierre.otf","./icons/apple-touch-icon.png","./icons/favicon.svg","./icons/icon-192.png","./icons/icon-512.png","./icons/maskable-512.png","./index.html","./manifest.webmanifest"];
 const MEDIA = ["./audio/reactivate/01.mp3","./audio/reactivate/02.mp3","./audio/reactivate/03.mp3","./audio/reactivate/04.mp3","./audio/reactivate/05.mp3","./audio/reactivate/06.mp3","./audio/reactivate/07.mp3","./audio/reactivate/08.mp3","./audio/rebalance/intro.mp3","./audio/rebalance/main.mp3","./audio/rebalance/outro.mp3","./audio/recontrol/intro.mp3","./audio/recontrol/main.mp3","./audio/recontrol/outro.mp3","./audio/recover/intro.mp3","./audio/recover/main.mp3","./audio/recover/outro.mp3","./audio/reward.mp3"];
 
 const SHELL_CACHE = `reair-shell-${BUILD}`;
@@ -82,7 +82,9 @@ async function respond(event) {
   const key = url.origin + url.pathname;
   const range = req.headers.get('range');
 
-  const cached = (await caches.match(key)) || (req.mode === 'navigate' ? await caches.match(new URL('./index.html', self.registration.scope).href) : undefined);
+  // Pages fall back to the app; real files such as the calendar reminders do not.
+  const page = req.mode === 'navigate' && !/\.(?!html$)[a-z0-9]+$/i.test(url.pathname);
+  const cached = (await caches.match(key)) || (page ? await caches.match(new URL('./index.html', self.registration.scope).href) : undefined);
   if (cached) return range ? ranged(cached, range) : cached;
 
   const res = await fetch(req);
