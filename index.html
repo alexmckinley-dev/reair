@@ -16,7 +16,36 @@
     <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png" />
     <link rel="preload" href="./fonts/Alcubierre.otf" as="font" type="font/otf" crossorigin />
     <style>@font-face{font-family:Alcubierre;src:url(./fonts/Alcubierre.otf)format("opentype");font-display:swap}html,body{background:#1b1430;height:100%;margin:0}</style>
-    <script type="module" crossorigin src="./assets/index-BYOwfVjS.js"></script>
+    <script>
+      // Self-repair: if the app's code does not load or the page stays empty,
+      // forget the stored app (not the music, not your data) and load afresh. Once per visit.
+      (function () {
+        var KEY = 'reair.repair';
+        function repair() {
+          try {
+            if (!navigator.onLine || sessionStorage.getItem(KEY)) return;
+            sessionStorage.setItem(KEY, '1');
+          } catch (e) {
+            return;
+          }
+          var sw = navigator.serviceWorker;
+          var unreg = sw ? sw.getRegistrations().then(function (rs) { return Promise.all(rs.map(function (r) { return r.unregister(); })); }) : Promise.resolve();
+          var clear = window.caches ? caches.keys().then(function (ks) { return Promise.all(ks.filter(function (k) { return k.indexOf('reair-shell-') === 0; }).map(function (k) { return caches.delete(k); })); }) : Promise.resolve();
+          Promise.all([unreg, clear]).catch(function () {}).then(function () { location.reload(); });
+        }
+        window.addEventListener('error', function (e) {
+          var t = e.target;
+          if (t && t.tagName === 'SCRIPT' && /assets\//.test(t.src)) repair();
+        }, true);
+        window.addEventListener('load', function () {
+          setTimeout(function () {
+            var root = document.getElementById('root');
+            if (root && !root.firstChild) repair();
+          }, 6000);
+        });
+      })();
+    </script>
+    <script type="module" crossorigin src="./assets/index-BHX_a77v.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-LxGQZ1BC.css">
   </head>
   <body>

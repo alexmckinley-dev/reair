@@ -1,7 +1,7 @@
 // REAIR service worker: makes the app work offline once it has been opened.
 // The lists below are filled in by the build (see vite.config.ts).
-const BUILD = "53bf127e7da0";
-const SHELL = ["./","./assets/index-BYOwfVjS.js","./assets/index-LxGQZ1BC.css","./brand/enso.svg","./brand/headphones.svg","./brand/nose.svg","./brand/symbol.svg","./brand/wordmark.svg","./fonts/Alcubierre.otf","./icons/apple-touch-icon.png","./icons/favicon.svg","./icons/icon-192.png","./icons/icon-512.png","./icons/maskable-512.png","./index.html","./manifest.webmanifest"];
+const BUILD = "bc6278bb27b2";
+const SHELL = ["./","./assets/index-BHX_a77v.js","./assets/index-LxGQZ1BC.css","./brand/enso.svg","./brand/headphones.svg","./brand/nose.svg","./brand/symbol.svg","./brand/wordmark.svg","./fonts/Alcubierre.otf","./icons/apple-touch-icon.png","./icons/favicon.svg","./icons/icon-192.png","./icons/icon-512.png","./icons/maskable-512.png","./index.html","./manifest.webmanifest"];
 const MEDIA = ["./audio/reactivate/01.mp3","./audio/reactivate/02.mp3","./audio/reactivate/03.mp3","./audio/reactivate/04.mp3","./audio/reactivate/05.mp3","./audio/reactivate/06.mp3","./audio/reactivate/07.mp3","./audio/reactivate/08.mp3","./audio/rebalance/intro.mp3","./audio/rebalance/main.mp3","./audio/rebalance/outro.mp3","./audio/recontrol/intro.mp3","./audio/recontrol/main.mp3","./audio/recontrol/outro.mp3","./audio/recover/intro.mp3","./audio/recover/main.mp3","./audio/recover/outro.mp3","./audio/reward.mp3"];
 
 const SHELL_CACHE = `reair-shell-${BUILD}`;
@@ -12,7 +12,9 @@ self.addEventListener('install', (event) => {
   event.waitUntil(
     caches
       .open(SHELL_CACHE)
-      .then((cache) => cache.addAll(SHELL))
+      // Straight from the server: a copy of index.html still in the browser's
+      // cache (GitHub Pages: 10 minutes) would point at files of the old version.
+      .then((cache) => cache.addAll(SHELL.map((url) => new Request(url, { cache: 'reload' }))))
       .then(() => self.skipWaiting()),
   );
 });
